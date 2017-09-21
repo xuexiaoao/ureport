@@ -31,6 +31,7 @@ public class HtmlReport {
 	private String reportAlign;
 	private Collection<ChartData> chartDatas;
 	private int htmlIntervalRefreshValue;
+	private int totals;//总条数
 	public String getContent() {
 		return content;
 	}
@@ -72,5 +73,13 @@ public class HtmlReport {
 	}
 	public void setHtmlIntervalRefreshValue(int htmlIntervalRefreshValue) {
 		this.htmlIntervalRefreshValue = htmlIntervalRefreshValue;
+	}
+
+	public int getTotals() {
+		return totals;
+	}
+
+	public void setTotals(int totals) {
+		this.totals = totals;
 	}
 }

@@ -114,6 +114,12 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 				context.put("tools", tools);
 			}
 			context.put("contextPath", req.getContextPath());
+			context.put("totals",htmlReport.getTotals());
+			String currentPara = req.getParameter("current");
+			if(StringUtils.isEmpty(currentPara)){
+				currentPara = "0";
+			}
+			context.put("current",Integer.valueOf(currentPara));
 			resp.setContentType("text/html");
 			resp.setCharacterEncoding("utf-8");
 			Template template=ve.getTemplate("ureport-html/html-preview.html","utf-8");

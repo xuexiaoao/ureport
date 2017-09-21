@@ -71,7 +71,7 @@ public class ExportPdfServletAction extends BaseServletAction{
 		}
 		String fileName=req.getParameter("_n");
 		if(StringUtils.isNotBlank(fileName)){
-			fileName=decode(fileName);
+			fileName=decode(fileName)+".pdf";
 		}else{
 			fileName="ureport.pdf";
 		}

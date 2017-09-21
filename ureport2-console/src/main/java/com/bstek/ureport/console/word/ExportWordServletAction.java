@@ -65,7 +65,7 @@ public class ExportWordServletAction extends BaseServletAction {
 		}
 		String fileName=req.getParameter("_n");
 		if(StringUtils.isNotBlank(fileName)){
-			fileName=decode(fileName);
+			fileName=decode(fileName)+".docx";
 		}else{
 			fileName="ureport.docx";
 		}

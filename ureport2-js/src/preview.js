@@ -82,6 +82,13 @@ $(document).ready(function(){
         const url=window._server+'/excel/sheet'+urlParameters;
         window.open(url,'_blank');
     });
+
+    $(`.next-page`).click(function(){
+        _getPageData(urlParameters,'next');
+    });
+    $(`.last-page`).click(function(){
+        _getPageData(urlParameters,'last');
+    });
 });
 
 function buildPrintStyle(paper){
@@ -192,4 +199,27 @@ window._buildChart=function(canvasId,chartJson){
         });
     };
     const chart=new Chart(ctx,chartJson);
+};
+
+window._getPageData=function(params,operation){
+    let url="/unicomReport/ureport/preview";
+    var index = params.indexOf("&current");
+    if(index==-1){
+        url +=params;
+    }else{
+        var _params = params.substring(0,index);
+        url += _params;
+    }
+    var last_current = $("#current").val();
+    if(last_current=='${current}'|| last_current==null||last_current==''){
+        last_current = 0;
+    }
+    var current =0;
+    if(operation=='next'){
+        current = parseInt(last_current)+100;
+    }else if(operation=='last'){
+        current = parseInt(last_current)-100;
+    }
+    url = url+"&current="+current;
+    $(window.parent.document).find("#audit").attr("src", url);
 };

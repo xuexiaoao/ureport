@@ -48,7 +48,7 @@ public class HtmlProducer{
 	public String produce(Context context,List<Page> pages,int columnMargin,boolean breakPage){
 		int pageSize=pages.size();
 		int singleTableWidth=buildTableWidth(pages.get(0).getColumns());
-		int tableWidth=singleTableWidth*pageSize+columnMargin*(pageSize-1);
+		String tableWidth="100%";
 		String bgStyle="";
 		String bgImage=context.getReport().getPaper().getBgImage();
 		if(StringUtils.isNotBlank(bgImage)){
@@ -56,9 +56,9 @@ public class HtmlProducer{
 		}
 		StringBuilder sb=new StringBuilder();
 		if(breakPage){
-			sb.append("<table border='0' class='page-break' style='margin:auto;border-collapse:collapse;width:"+tableWidth+"pt"+bgStyle+"'>");			
+			sb.append("<table border='0' class='page-break' style='margin:auto;border-collapse:collapse;width:"+tableWidth+bgStyle+"'>");
 		}else{
-			sb.append("<table border='0' class='page-break' style='margin:auto;border-collapse:collapse;width:"+tableWidth+"pt"+bgStyle+"'>");			
+			sb.append("<table border='0' class='page-break' style='margin:auto;border-collapse:collapse;width:"+tableWidth+bgStyle+"'>");
 		}
 		sb.append("<tr>");
 		for(int i=0;i<pageSize;i++){
@@ -86,16 +86,16 @@ public class HtmlProducer{
 	
 	private StringBuilder buildTable(Context context,List<Row> rows, List<Column> columns,Map<Row, Map<Column, Cell>> cellMap,boolean breakPage,boolean forPage) {
 		StringBuilder sb=new StringBuilder();
-		int tableWidth=buildTableWidth(columns);
+		String tableWidth="100%";
 		String bgStyle="";
 		String bgImage=context.getReport().getPaper().getBgImage();
 		if(StringUtils.isNotBlank(bgImage)){
 			bgStyle=";background:url("+bgImage+") no-repeat";
 		}
 		if(breakPage){
-			sb.append("<table class='page-break' border='0' style='margin:auto;border-collapse:collapse;width:"+tableWidth+"pt"+bgStyle+"'>");						
+			sb.append("<table class='page-break' border='0' style='margin:auto;border-collapse:collapse;width:"+tableWidth+bgStyle+"'>");
 		}else{
-			sb.append("<table border='0' style='margin:auto;border-collapse:collapse;width:"+tableWidth+"pt"+bgStyle+"'>");						
+			sb.append("<table border='0' style='margin:auto;border-collapse:collapse;width:"+tableWidth+bgStyle+"'>");
 		}
 		int colSize=columns.size();
 		int rowSize=rows.size();

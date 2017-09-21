@@ -74,6 +74,10 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 	public Report buildReport(ReportDefinition reportDefinition,Map<String,Object> parameters) {
 		Report report = reportDefinition.newReport();
 		Map<String,Dataset> datasetMap=buildDatasets(reportDefinition, parameters, applicationContext);
+		if(datasetMap.get("countResult")!=null){
+			Map<String,Object> results = (Map<String, Object>) datasetMap.get("countResult").getData().get(0);
+			report.setTotal(String.valueOf(results.get("count(*)")));
+		}
 		Context context = new Context(this,report,datasetMap,applicationContext,parameters,hideRowColumnBuilder);
 		long start=System.currentTimeMillis();
 		List<Cell> cells=new ArrayList<Cell>();

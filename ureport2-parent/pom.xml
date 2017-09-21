@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.bstek.ureport</groupId>
+	<groupId>com.unicom</groupId>
 	<artifactId>ureport2-parent</artifactId>
-	<version>2.0.2</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,20 +16,18 @@
 	</licenses>
 	<developers>
 		<developer>
-			<name>Gaojie</name>
-			<email>jacky.gao@bstek.com</email>
-			<organization>Bstek</organization>
-			<organizationUrl>http://www.bstek.com</organizationUrl>
+			<name>cooper</name>
+			<email>xuexiaoaoooo@gmail.com</email>
+			<organization>unicom</organization>
 		</developer>
 	</developers>
 	<scm>
-		<connection>https://github.com/youseries/ureport.git</connection>
-		<developerConnection>https://github.com/youseries/ureport.git</developerConnection>
-		<url>https://github.com/youseries/ureport</url>
+		<connection>https://github.com/xuexiaoao/ureport.git</connection>
+		<developerConnection>https://github.com/xuexiaoao/ureport.git</developerConnection>
+		<url>https://github.com/xuexiaoao/ureport</url>
 	</scm>
 	<organization>
-		<name>Bstek</name>
-		<url>http://www.bstek.com</url>
+		<name>unicom</name>
 	</organization>
 	<build>
 		<resources>
@@ -170,7 +168,7 @@
 	</distributionManagement>
 
 	<name>UReport2 Parent Project</name>
-	<url>https://github.com/youseries/ureport/tree/master/ureport2-parent</url>
+	<url>https://github.com/xuexiaoao/ureport/tree/master/ureport2-parent</url>
 	<issueManagement>
 		<url>${jira.browse.url}/VELOCITY</url>
 	</issueManagement>

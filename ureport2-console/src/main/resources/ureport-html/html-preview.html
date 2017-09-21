@@ -14,6 +14,16 @@
 #if($tools.show)
 <div style="border:solid 1px #ddd;border-radius:5px;height:35px;width:100%;margin-bottom:5px;background:#f8f8f8">
 	<div style="text-align:${reportAlign}">
+		#if($totals)
+			#if($current)
+				#set( $temp = $current - 100 )
+				#if($temp>=0)
+					<button type="button" class="btn btn-default last-page" style="display:inline-block;padding:0;background:#f8f8f8;border:none;margin:6px" title="上一页">
+						<img src='${contextPath}/ureport/res/ureport-asserts/icons/excel-with-paging-sheet.svg' width="20px">
+					</button>
+				#end
+			#end
+		#end
 		#if($tools.print)
 		<button type="button" class="btn btn-default ureport-print" style="display:inline-block;padding:0;background:#f8f8f8;border:none;margin:3px" title="在线打印">
 			<img src='${contextPath}/ureport/res/ureport-asserts/icons/print.svg' width="20px">
@@ -53,6 +63,23 @@
 		<button type="button" class="btn btn-default ureport-export-excel-paging-sheet" style="display:inline-block;padding:0;background:#f8f8f8;border:none;margin:3px" title="分页分Sheet导出EXCEL">
 			<img src='${contextPath}/ureport/res/ureport-asserts/icons/excel-with-paging-sheet.svg' width="20px">
 		</button>
+		#end
+		#if($totals)
+			#if($current)
+				#if($current==0)
+					#if($totals>100)
+						<button type="button" class="btn btn-default next-page" style="display:inline-block;padding:0;background:#f8f8f8;border:none;margin:6px" title="下一页">
+							<img src='${contextPath}/ureport/res/ureport-asserts/icons/excel-with-paging-sheet.svg' width="20px">
+						</button>
+					#end
+				#elseif( $current + 100 < $totals )
+					<button type="button" class="btn btn-default next-page" style="display:inline-block;padding:0;background:#f8f8f8;border:none;margin:6px" title="下一页">
+						<img src='${contextPath}/ureport/res/ureport-asserts/icons/excel-with-paging-sheet.svg' width="20px">
+					</button>
+				#end
+			#end
+		<input type="hidden" id="totals" value="${totals}"/>
+		<input type="hidden" id="current" value="${current}"/>
 		#end
 		#if($tools.paging)
 		<div class="btn-group">

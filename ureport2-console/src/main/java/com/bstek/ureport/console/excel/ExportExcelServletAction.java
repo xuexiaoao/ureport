@@ -72,7 +72,7 @@ public class ExportExcelServletAction extends BaseServletAction {
 		}
 		String fileName=req.getParameter("_n");
 		if(StringUtils.isNotBlank(fileName)){
-			fileName=decode(fileName);
+			fileName=decode(fileName)+".xlsx";
 		}else{
 			fileName="ureport.xlsx";
 		}

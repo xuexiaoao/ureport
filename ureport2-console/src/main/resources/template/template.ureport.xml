@@ -60,6 +60,9 @@
 	<column col-number="2" width="80"/>
 	<column col-number="3" width="80"/>
 	<column col-number="4" width="80"/>
-	
+
+	<datasource name="defaultDataSource" type="buildin">
+	</datasource>
+
 	<paper type="A4" orientation="portrait" paging-mode="fitpage"></paper>
 </ureport>

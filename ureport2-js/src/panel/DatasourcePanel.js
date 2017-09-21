@@ -22,36 +22,12 @@ export default class DatasourcePanel{
         const panel=$(`<div style="width:100%;"></div>`);
         const toolbar=$(`<div class="btn-group ud-toolbar"></div>`);
         panel.append(toolbar);
-        const addSqlBtn=$(`<button class="btn btn-default" style="border:none;border-radius:0;background: #f8f8f8;padding: 6px 8px;" title="添加数据库连接">
-            <i class="ureport ureport-database"></i>
-        </button>`);
-        toolbar.append(addSqlBtn);
 
         this.treeContainer=$(`<div style="height: 500px;overflow: auto">`);
         panel.append(this.treeContainer);
 
-        this.datasourceDialog=new DatasourceDialog(this.datasources);
         const _this=this;
 
-        addSqlBtn.click(function(){
-            _this.datasourceDialog.show(function(name,username,password,driver,url){
-                const ds={name,username,password,driver,url};
-                const tree=new DatabaseTree(_this.treeContainer,_this.datasources,ds,_this.datasourceDialog,_this.context);
-                _this.datasources.push(tree);
-            });
-        });
-        const addSpringBtn=$(`<button class="btn btn-default" style="border:none;border-radius:0;background: #f8f8f8;padding: 6px 8px;" title="添加SpringBean连接">
-            <i class="ureport ureport-leaf"></i>
-        </button>`);
-        toolbar.append(addSpringBtn);
-        this.springDialog=new SpringDialog(this.datasources);
-        addSpringBtn.click(function(){
-            _this.springDialog.show(function(name,beanId){
-                const ds={name,beanId};
-                const tree=new SpringTree(_this.treeContainer,_this.datasources,ds,_this.springDialog,_this.context);
-                _this.datasources.push(tree);
-            });
-        });
         const addBuildinBtn=$(`<button class="btn btn-default" style="border:none;border-radius:0;background: #f8f8f8;padding: 6px 8px;" title="添加内置数据源连接">
             <i class="ureport ureport-shareconnection"></i>
         </button>`);

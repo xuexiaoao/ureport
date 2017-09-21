@@ -50,6 +50,7 @@ public class Report {
 	private List<Cell> lazyComputeCells=new ArrayList<Cell>();
 	private Map<Row,Map<Column,Cell>> rowColCellMap=new HashMap<Row,Map<Column,Cell>>();
 	private Map<String,List<Cell>> cellsMap=new HashMap<String,List<Cell>>();
+	private String total;//总条数
 	public void insertRow(Row row,int rowNumber){
 		int pos=rowNumber-1;
 		rows.add(pos,row);
@@ -238,5 +239,13 @@ public class Report {
 	}
 	public void setFooter(HeaderFooterDefinition footer) {
 		this.footer = footer;
+	}
+
+	public String getTotal() {
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
 	}
 }

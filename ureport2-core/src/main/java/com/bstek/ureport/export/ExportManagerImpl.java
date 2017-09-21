@@ -28,6 +28,7 @@ import com.bstek.ureport.export.html.HtmlReport;
 import com.bstek.ureport.export.pdf.PdfProducer;
 import com.bstek.ureport.export.word.high.WordProducer;
 import com.bstek.ureport.model.Report;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Jacky.gao
@@ -53,6 +54,10 @@ public class ExportManagerImpl implements ExportManager {
 		htmlReport.setReportAlign(report.getPaper().getHtmlReportAlign().name());
 		htmlReport.setChartDatas(report.getContext().getChartDataMap().values());
 		htmlReport.setHtmlIntervalRefreshValue(report.getPaper().getHtmlIntervalRefreshValue());
+
+		if(!StringUtils.isEmpty(report.getTotal())){
+			htmlReport.setTotals(Integer.valueOf(report.getTotal()));
+		}
 		return htmlReport;
 	}
 	
