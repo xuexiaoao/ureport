@@ -71,10 +71,11 @@ public class ExportPdfServletAction extends BaseServletAction{
 		}
 		String fileName=req.getParameter("_n");
 		if(StringUtils.isNotBlank(fileName)){
-			fileName=decode(fileName)+".pdf";
+			fileName=decode(fileName)+".pdf"; //modify by cooper 2017/10/09 09:18
 		}else{
 			fileName="ureport.pdf";
 		}
+		fileName=new String(fileName.getBytes("UTF-8"),"ISO8859-1");
 		if(forPrint){
 			resp.setContentType("application/pdf");
 			resp.setHeader("Content-Disposition","inline;filename=\"" + fileName + "\"");

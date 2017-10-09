@@ -48,6 +48,7 @@ public class HtmlProducer{
 	public String produce(Context context,List<Page> pages,int columnMargin,boolean breakPage){
 		int pageSize=pages.size();
 		int singleTableWidth=buildTableWidth(pages.get(0).getColumns());
+		//modify by cooper 2017/10/09 09:18 start
 		String tableWidth="100%";
 		String bgStyle="";
 		String bgImage=context.getReport().getPaper().getBgImage();
@@ -60,6 +61,7 @@ public class HtmlProducer{
 		}else{
 			sb.append("<table border='0' class='page-break' style='margin:auto;border-collapse:collapse;width:"+tableWidth+bgStyle+"'>");
 		}
+		//modify by cooper 2017/10/09 09:18 end
 		sb.append("<tr>");
 		for(int i=0;i<pageSize;i++){
 			if(i>0){
@@ -86,6 +88,7 @@ public class HtmlProducer{
 	
 	private StringBuilder buildTable(Context context,List<Row> rows, List<Column> columns,Map<Row, Map<Column, Cell>> cellMap,boolean breakPage,boolean forPage) {
 		StringBuilder sb=new StringBuilder();
+		//modify by cooper 2017/10/09 09:18 start
 		String tableWidth="100%";
 		String bgStyle="";
 		String bgImage=context.getReport().getPaper().getBgImage();
@@ -97,6 +100,7 @@ public class HtmlProducer{
 		}else{
 			sb.append("<table border='0' style='margin:auto;border-collapse:collapse;width:"+tableWidth+bgStyle+"'>");
 		}
+		//modify by cooper 2017/10/09 09:18 end
 		int colSize=columns.size();
 		int rowSize=rows.size();
 		for(int i=0;i<rowSize;i++){

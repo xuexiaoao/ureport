@@ -54,10 +54,11 @@ public class ExportManagerImpl implements ExportManager {
 		htmlReport.setReportAlign(report.getPaper().getHtmlReportAlign().name());
 		htmlReport.setChartDatas(report.getContext().getChartDataMap().values());
 		htmlReport.setHtmlIntervalRefreshValue(report.getPaper().getHtmlIntervalRefreshValue());
-
+		//modify by cooper 2017/10/09 09:18 start
 		if(!StringUtils.isEmpty(report.getTotal())){
 			htmlReport.setTotals(Integer.valueOf(report.getTotal()));
 		}
+		//modify by cooper 2017/10/09 09:18 end
 		return htmlReport;
 	}
 	

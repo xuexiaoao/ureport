@@ -74,10 +74,12 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 	public Report buildReport(ReportDefinition reportDefinition,Map<String,Object> parameters) {
 		Report report = reportDefinition.newReport();
 		Map<String,Dataset> datasetMap=buildDatasets(reportDefinition, parameters, applicationContext);
+		//modify by cooper 2017/10/09 09:18 start
 		if(datasetMap.get("countResult")!=null){
 			Map<String,Object> results = (Map<String, Object>) datasetMap.get("countResult").getData().get(0);
 			report.setTotal(String.valueOf(results.get("count(*)")));
 		}
+		//modify by cooper 2017/10/09 09:18 end
 		Context context = new Context(this,report,datasetMap,applicationContext,parameters,hideRowColumnBuilder);
 		long start=System.currentTimeMillis();
 		List<Cell> cells=new ArrayList<Cell>();
@@ -422,9 +424,6 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 						}
 						pageRepeatFooters.remove(index);
 						pageRepeatFooters.add(index,row);
-					}
-					if(index==-1){
-						throw new ReportComputeException("Invalid row["+band+"] with key "+rowKey+".");
 					}
 					continue;
 				}

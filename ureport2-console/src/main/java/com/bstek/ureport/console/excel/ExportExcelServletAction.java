@@ -72,11 +72,12 @@ public class ExportExcelServletAction extends BaseServletAction {
 		}
 		String fileName=req.getParameter("_n");
 		if(StringUtils.isNotBlank(fileName)){
-			fileName=decode(fileName)+".xlsx";
+			fileName=decode(fileName)+".xlsx"; //modify by cooper 2017/10/09 09:18
 		}else{
 			fileName="ureport.xlsx";
 		}
 		resp.setContentType("application/octet-stream;charset=ISO8859-1");
+		fileName=new String(fileName.getBytes("UTF-8"),"ISO8859-1");
 		resp.setHeader("Content-Disposition","attachment;filename=\"" + fileName + "\"");
 		Map<String, Object> parameters = buildParameters(req);
 		String fullName=file+parameters.toString();

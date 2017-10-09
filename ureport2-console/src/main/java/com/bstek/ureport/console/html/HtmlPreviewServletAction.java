@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -83,6 +84,12 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 				context.put("content", "<div style='color:red'><strong>报表计算错误：</strong>"+errorMsg+"</div>");
 				context.put("error", true);
 			}else{
+				Locale locale=req.getLocale();
+				if(!locale.equals(Locale.CHINA)){
+					context.put("locale", "EN");
+				}else{
+					context.put("locale", "EN");				
+				}
 				context.put("content", htmlReport.getContent());
 				context.put("style", htmlReport.getStyle());
 				context.put("reportAlign", htmlReport.getReportAlign());				
@@ -114,12 +121,14 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 				context.put("tools", tools);
 			}
 			context.put("contextPath", req.getContextPath());
+			//modify by cooper 2017/10/09 09:18 start
 			context.put("totals",htmlReport.getTotals());
 			String currentPara = req.getParameter("current");
 			if(StringUtils.isEmpty(currentPara)){
 				currentPara = "0";
 			}
 			context.put("current",Integer.valueOf(currentPara));
+			//modify by cooper 2017/10/09 09:18 end
 			resp.setContentType("text/html");
 			resp.setCharacterEncoding("utf-8");
 			Template template=ve.getTemplate("ureport-html/html-preview.html","utf-8");
