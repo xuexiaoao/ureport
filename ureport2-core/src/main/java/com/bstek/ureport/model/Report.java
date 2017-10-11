@@ -34,8 +34,8 @@ import com.bstek.ureport.definition.Paper;
  */
 public class Report {
 	private Paper paper;
-	private HeaderFooterDefinition header;
-	private HeaderFooterDefinition footer;
+	private HeaderFooterDefinition header;//页眉
+	private HeaderFooterDefinition footer;//页脚
 	private Cell rootCell;
 	private Context context;
 	private List<Row> rows;

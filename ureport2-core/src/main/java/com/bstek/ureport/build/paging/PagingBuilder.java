@@ -32,6 +32,7 @@ public class PagingBuilder {
 	static{
 		paginationMap.put(PagingMode.fitpage, new FitPagePagination());
 		paginationMap.put(PagingMode.fixrows, new FixRowsPagination());
+		paginationMap.put(PagingMode.datePage,new DatePagination());
 	}
 	public static List<Page> buildPages(Report report){
 		Paper paper = report.getPaper();

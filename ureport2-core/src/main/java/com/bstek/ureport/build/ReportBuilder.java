@@ -389,7 +389,7 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 				pages.add(newPage);
 			}
 			buildPageHeaderFooter(pages, report);
-		}else{
+		}else if(pagingMode.equals(PagingMode.fixrows)){
 			int fixRows=paper.getFixRows()-headerRows.size()-footerRows.size();
 			if(fixRows<0){
 				fixRows=1;
@@ -437,6 +437,64 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 			}
 			if(pageRows.size()>0){
 				Page newPage=buildPage(pageRows,pageRepeatHeaders,pageRepeatFooters,titleRows,pageIndex,report);
+				pages.add(newPage);
+			}
+			buildPageHeaderFooter(pages, report);
+		}else if(pagingMode.equals(PagingMode.datePage)){
+			pageRepeatHeaders.addAll(headerRows);
+			pageRepeatFooters.addAll(footerRows);
+			Row firstRow = null;
+			if(rows.size()>0){
+				firstRow = rows.get(0);
+			}
+			int firstRowCells = firstRow.getCells().size();
+			for(int i=1;i<rows.size();i++){
+				Row row = rows.get(i);
+				int height=row.getRealHeight();
+				if(height==0){
+					continue;
+				}
+				Band band=row.getBand();
+				if(band!=null){
+					String rowKey=row.getRowKey();
+					int index=-1;
+					if(band.equals(Band.headerrepeat)){
+						for(int j=0;j<pageRepeatHeaders.size();j++){
+							Row headerRow=pageRepeatHeaders.get(j);
+							if(headerRow.getRowKey().equals(rowKey)){
+								index=j;
+								break;
+							}
+						}
+						pageRepeatHeaders.remove(index);
+						pageRepeatHeaders.add(index,row);
+					}else if(band.equals(Band.footerrepeat)){
+						for(int j=0;j<pageRepeatFooters.size();j++){
+							Row footerRow=pageRepeatFooters.get(j);
+							if(footerRow.getRowKey().equals(rowKey)){
+								index=j;
+								break;
+							}
+						}
+						pageRepeatFooters.remove(index);
+						pageRepeatFooters.add(index,row);
+					}
+					continue;
+				}
+				int currentRowCells = row.getCells().size();
+				if(firstRowCells==currentRowCells && i!=1){
+					pageRows.add(0,firstRow);
+					Page newPage=buildPage(pageRows,pageRepeatHeaders,pageRepeatFooters,titleRows,pageIndex,report);
+					pageIndex++;
+					pages.add(newPage);
+					pageRows=new ArrayList<>();
+				}
+				pageRows.add(row);
+			}
+			if(pageRows.size()>0){
+				pageRows.add(0,firstRow);
+				Page newPage=buildPage(pageRows,pageRepeatHeaders,pageRepeatFooters,titleRows,pageIndex,report);
+				pageIndex++;
 				pages.add(newPage);
 			}
 			buildPageHeaderFooter(pages, report);

@@ -421,6 +421,10 @@ export default class SettingsDialog{
             <input type="radio" name="pagingType" value="true"> 固定行数
         </label>`);
         group.append(this.fixNum);
+        this.datePage=$(`<label class="checkbox-inline" style="padding-left: 5px">
+            <input type="radio" name="pagingType" value="true"> 按日期分sheet分页
+        </label>`);
+        group.append(this.datePage);
 
         const rowNumberGroup=$(`<span style="margin-left: 15px"><span>每页行数：</span></span>`);
         group.append(rowNumberGroup);
@@ -444,6 +448,11 @@ export default class SettingsDialog{
         this.fixNum.children('input').click(function(){
             rowNumberGroup.show();
             _this.paper.pagingMode='fixrows';
+            setDirty();
+        });
+        this.datePage.children('input').click(function(){
+            rowNumberGroup.hide();
+            _this.paper.pagingMode='datePage';
             setDirty();
         });
     }
@@ -563,10 +572,13 @@ export default class SettingsDialog{
         if(pagingMode==='fitpage'){
             this.fitPage.children('input').trigger('click');
             this.fitPage.children('input').prop('checked',true);
-        }else{
+        }else if(pagingMode==='fixrows'){
             this.fixNum.children('input').trigger('click');
             this.fixNum.children('input').prop('checked',true);
             this.rowNumberEditor.val(this.paper.fixRows);
+        }else if(pagingMode==='datePage'){
+            this.datePage.children('input').trigger('click');
+            this.datePage.children('input').prop('checked',true);
         }
     }
 }
