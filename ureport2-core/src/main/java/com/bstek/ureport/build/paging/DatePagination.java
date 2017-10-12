@@ -30,19 +30,18 @@ import com.bstek.ureport.model.Row;
 public class DatePagination extends BasePagination implements Pagination {
 	@Override
 	public List<Page> doPaging(Report report) {
-		Paper paper=report.getPaper();
 		List<Row> rows=report.getRows();
 		List<Row> headerRows=report.getHeaderRepeatRows();
 		List<Row> footerRows=report.getFooterRepeatRows();
 		List<Row> titleRows=report.getTitleRows();
 		List<Row> summaryRows=report.getSummaryRows();
 
-		List<Row> pageRepeatHeaders=new ArrayList<Row>();
-		List<Row> pageRepeatFooters=new ArrayList<Row>();
+		List<Row> pageRepeatHeaders=new ArrayList<>();
+		List<Row> pageRepeatFooters=new ArrayList<>();
 		pageRepeatHeaders.addAll(headerRows);
 		pageRepeatFooters.addAll(footerRows);
-		List<Page> pages=new ArrayList<Page>();
-		List<Row> pageRows=new ArrayList<Row>();
+		List<Page> pages=new ArrayList<>();
+		List<Row> pageRows=new ArrayList<>();
 		int pageIndex=1;
 		Row firstRow = null;
 		if(rows.size()>0){
@@ -83,6 +82,7 @@ public class DatePagination extends BasePagination implements Pagination {
 				continue;
 			}
 			int currentRowCells = row.getCells().size();
+
 			if(firstRowCells==currentRowCells && i!=1){
 				pageRows.add(0,firstRow);
 				Page newPage=buildPage(pageRows,pageRepeatHeaders,pageRepeatFooters,titleRows,pageIndex,report);
@@ -102,4 +102,5 @@ public class DatePagination extends BasePagination implements Pagination {
 		buildSummaryRows(summaryRows, pages);
 		return pages;
 	}
+
 }

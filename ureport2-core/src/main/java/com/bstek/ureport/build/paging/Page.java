@@ -29,7 +29,9 @@ public class Page {
 	private List<Column> columns;
 	private HeaderFooter header;
 	private HeaderFooter footer;
-	
+
+	private String sheetName;//分页分sheet的sheet页名称
+
 	public Page(List<Row> rows,List<Column> columns) {
 		this.rows = rows;
 		this.columns=columns;
@@ -51,5 +53,13 @@ public class Page {
 	}
 	public void setFooter(HeaderFooter footer) {
 		this.footer = footer;
+	}
+
+	public String getSheetName() {
+		return sheetName;
+	}
+
+	public void setSheetName(String sheetName) {
+		this.sheetName = sheetName;
 	}
 }

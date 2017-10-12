@@ -71,7 +71,7 @@ public class ExcelBuilderWithPaging extends ExcelBuilder{
 			Sheet sheet=null;
 			for(Page page:pages){
 				if(withSheet){
-					sheet=createSheet(wb, paper, "第"+pageIndex+"页");
+					sheet=createSheet(wb, paper, page.getSheetName());//modify by cooper 2017/10/12 09:32
 					rowNumber=0;
 				}else if(sheet==null){
 					sheet=createSheet(wb, paper, null);						
