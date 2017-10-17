@@ -28,7 +28,7 @@ export default class DatasourcePanel{
 
         const _this=this;
 
-        const addBuildinBtn=$(`<button class="btn btn-default" style="border:none;border-radius:0;background: #f8f8f8;padding: 6px 8px;" title="添加内置数据源连接">
+        const addBuildinBtn=$(`<button class="btn btn-default" style="border:none;border-radius:0;background: #f8f8f8;padding: 6px 8px;" title="${window.i18n.property.datasource.addBuildin}">
             <i class="ureport ureport-shareconnection"></i>
         </button>`);
         toolbar.append(addBuildinBtn);
