@@ -158,10 +158,14 @@ public abstract class BasePagination {
 				buildExistPageFunctionCell(context, cell);
 			}
 		}
-		Row sheetRow = rows.get(1);
-		int cellSize = sheetRow.getCells().size();
 		Page page=new Page(rows,columns);
-		buildSheetName(page,sheetRow,pageIndex,cellSize);
+		//modify by cooper 2017/10/24 11:42 start
+		if(rows.size()>1){
+			Row sheetRow = rows.get(1);
+			int cellSize = sheetRow.getCells().size();
+			buildSheetName(page,sheetRow,pageIndex,cellSize);
+		}
+		//modify by cooper 2017/10/24 11:42 start
 		return page;
 	}
 	//add by cooper 2017/10/12 09:26 start
