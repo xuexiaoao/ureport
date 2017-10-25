@@ -72,6 +72,9 @@ public class HideRowColumnBuilder {
 		List<Column> columns=report.getColumns();
 		int rowNumber=row.getRowNumber();
 		for(Column col:columns){
+			if(col.getWidth()==0){
+				continue;
+			}
 			Cell cell=map.get(col);
 			if(cell!=null){
 				int rowSpan=cell.getRowSpan();

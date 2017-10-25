@@ -128,12 +128,14 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 			}
 			context.put("contextPath", req.getContextPath());
 			//modify by cooper 2017/10/09 09:18 start
-			context.put("totals",htmlReport.getTotals());
-			String currentPara = req.getParameter("current");
-			if(StringUtils.isEmpty(currentPara)){
-				currentPara = "0";
+			if(htmlReport==null){
+				context.put("totals",htmlReport.getTotals());
+				String currentPara = req.getParameter("current");
+				if(StringUtils.isEmpty(currentPara)){
+					currentPara = "0";
+				}
+				context.put("current",Integer.valueOf(currentPara));
 			}
-			context.put("current",Integer.valueOf(currentPara));
 			//modify by cooper 2017/10/09 09:18 end
 			resp.setContentType("text/html");
 			resp.setCharacterEncoding("utf-8");
