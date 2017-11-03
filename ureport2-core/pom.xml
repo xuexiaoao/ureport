@@ -5,7 +5,7 @@
 	<version>1.0.RELEASE</version>
 	<parent>
 		<groupId>com.unicom</groupId>
-		<artifactId>ureport2-parent</artifactId>
+			<artifactId>ureport2-parent</artifactId>
 		<version>1.0</version>
 	</parent>
 	<dependencies>
@@ -86,6 +86,14 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>nexus</id>
+			<name>Nexus Release</name>
+			<url>http://10.161.24.232:39092/repository/maven-releases/</url>
+		</repository>
+	</distributionManagement>
+
 	<licenses>
 		<license>
 			<name>The Apache License, Version 2.0</name>

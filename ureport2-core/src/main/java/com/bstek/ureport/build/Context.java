@@ -1,17 +1,18 @@
 /*******************************************************************************
- * Copyright 2017 Bstek
+ * Copyright (C) 2017 Bstek.com
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  * 
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package com.bstek.ureport.build;
 
@@ -36,6 +37,7 @@ import com.bstek.ureport.model.Cell;
 import com.bstek.ureport.model.Column;
 import com.bstek.ureport.model.Report;
 import com.bstek.ureport.model.Row;
+import com.bstek.ureport.utils.ElCalculator;
 
 /**
  * @author Jacky.gao
@@ -53,6 +55,7 @@ public class Context {
 	private ReportBuilder reportBuilder;
 	private Map<String,Object> parameters;
 	private HideRowColumnBuilder hideRowColumnBuilder;
+	private ElCalculator elCalculator=new ElCalculator();
 	private Map<String,List<Cell>> unprocessedCellsMap = new HashMap<String,List<Cell>>();
 	private Map<Row,Map<Column,Cell>> blankCellsMap=new HashMap<Row,Map<Column,Cell>>();
 	private Map<Row,Integer> fillBlankRowsMap=new HashMap<Row,Integer>();
@@ -258,6 +261,10 @@ public class Context {
 			unprocessedCellsMap.remove(targetCellName);
 		}
 		return targetCellsList;
+	}
+	
+	public Object evalExpr(String expression){
+		return elCalculator.eval(expression);
 	}
 	
 	public boolean isCellPocessed(String cellName){

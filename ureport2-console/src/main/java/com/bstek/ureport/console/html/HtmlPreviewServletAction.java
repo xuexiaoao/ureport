@@ -1,17 +1,18 @@
 /*******************************************************************************
- * Copyright 2017 Bstek
+ * Copyright (C) 2017 Bstek.com
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  * 
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package com.bstek.ureport.console.html;
 
@@ -21,7 +22,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -44,8 +44,8 @@ import com.bstek.ureport.console.cache.TempObjectCache;
 import com.bstek.ureport.console.exception.ReportDesignException;
 import com.bstek.ureport.definition.Paper;
 import com.bstek.ureport.definition.ReportDefinition;
+import com.bstek.ureport.definition.searchform.FormPosition;
 import com.bstek.ureport.exception.ReportComputeException;
-import com.bstek.ureport.exception.ReportException;
 import com.bstek.ureport.export.ExportManager;
 import com.bstek.ureport.export.FullPageData;
 import com.bstek.ureport.export.PageBuilder;
@@ -53,6 +53,7 @@ import com.bstek.ureport.export.ReportRender;
 import com.bstek.ureport.export.SinglePageData;
 import com.bstek.ureport.export.html.HtmlProducer;
 import com.bstek.ureport.export.html.HtmlReport;
+import com.bstek.ureport.export.html.SearchFormData;
 import com.bstek.ureport.model.Report;
 
 /**
@@ -85,11 +86,20 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 				context.put("content", "<div style='color:red'><strong>报表计算错误：</strong>"+errorMsg+"</div>");
 				context.put("error", true);
 			}else{
-				Locale locale=req.getLocale();
-				if(!locale.equals(Locale.CHINA)){
-					context.put("locale", "EN");
+				SearchFormData formData=htmlReport.getSearchFormData();
+				if(formData!=null){
+					context.put("searchFormJs", formData.getJs());
+					if(formData.getFormPosition().equals(FormPosition.up)){
+						context.put("upSearchFormHtml", formData.getHtml());						
+						context.put("downSearchFormHtml", "");						
+					}else{
+						context.put("downSearchFormHtml", formData.getHtml());						
+						context.put("upSearchFormHtml", "");						
+					}
 				}else{
-					context.put("locale", "EN");				
+					context.put("searchFormJs", "");
+					context.put("downSearchFormHtml", "");
+					context.put("upSearchFormHtml", "");	
 				}
 				context.put("content", htmlReport.getContent());
 				context.put("style", htmlReport.getStyle());
@@ -174,7 +184,16 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 		String fullName=file+parameters.toString();
 		Report report=CacheUtils.getReport(fullName);
 		if(report==null){
-			throw new ReportException("Report preview data has expired,can not do load pages for print.");
+			ReportDefinition reportDefinition=null;
+			if(fullName.equals(PREVIEW_KEY)){
+				reportDefinition=(ReportDefinition)TempObjectCache.getObject(PREVIEW_KEY);
+				if(reportDefinition==null){
+					throw new ReportDesignException("Report data has expired,can not do export excel.");
+				}
+			}else{
+				reportDefinition=reportRender.getReportDefinition(file);
+			}
+			report=reportBuilder.buildReport(reportDefinition, parameters);					
 		}
 		FullPageData pageData=PageBuilder.buildFullPageData(report);
 		StringBuilder sb=new StringBuilder();
@@ -273,6 +292,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 			htmlReport.setChartDatas(report.getContext().getChartDataMap().values());			
 			htmlReport.setContent(html);
 			htmlReport.setStyle(reportDefinition.getStyle());
+			htmlReport.setSearchFormData(reportDefinition.buildSearchFormData());
 			htmlReport.setReportAlign(report.getPaper().getHtmlReportAlign().name());
 			htmlReport.setHtmlIntervalRefreshValue(report.getPaper().getHtmlIntervalRefreshValue());
 		}else{

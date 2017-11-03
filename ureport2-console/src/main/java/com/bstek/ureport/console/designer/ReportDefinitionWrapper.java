@@ -1,17 +1,18 @@
 /*******************************************************************************
- * Copyright 2017 Bstek
+ * Copyright (C) 2017 Bstek.com
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  * 
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package com.bstek.ureport.console.designer;
 
@@ -26,6 +27,7 @@ import com.bstek.ureport.definition.Paper;
 import com.bstek.ureport.definition.ReportDefinition;
 import com.bstek.ureport.definition.RowDefinition;
 import com.bstek.ureport.definition.datasource.DatasourceDefinition;
+import com.bstek.ureport.definition.searchform.SearchForm;
 
 /**
  * @author Jacky.gao
@@ -35,6 +37,8 @@ public class ReportDefinitionWrapper {
 	private Paper paper;
 	private HeaderFooterDefinition header;
 	private HeaderFooterDefinition footer;
+	private SearchForm searchForm;
+	private String searchFormXml;
 	private List<RowDefinition> rows;
 	private List<ColumnDefinition> columns;
 	private List<DatasourceDefinition> datasources;
@@ -43,6 +47,8 @@ public class ReportDefinitionWrapper {
 		this.paper=report.getPaper();
 		this.header=report.getHeader();
 		this.footer=report.getFooter();
+		this.searchForm=report.getSearchForm();
+		this.searchFormXml=report.getSearchFormXml();
 		this.rows=report.getRows();
 		this.columns=report.getColumns();
 		this.datasources=report.getDatasources();
@@ -65,10 +71,22 @@ public class ReportDefinitionWrapper {
 	public Paper getPaper() {
 		return paper;
 	}
+	public SearchForm getSearchForm() {
+		return searchForm;
+	}
+	public void setSearchForm(SearchForm searchForm) {
+		this.searchForm = searchForm;
+	}
 	public Map<String, CellDefinition> getCellsMap() {
 		return cellsMap;
 	}
 	public List<RowDefinition> getRows() {
 		return rows;
+	}
+	public String getSearchFormXml() {
+		return searchFormXml;
+	}
+	public void setSearchFormXml(String searchFormXml) {
+		this.searchFormXml = searchFormXml;
 	}
 }
