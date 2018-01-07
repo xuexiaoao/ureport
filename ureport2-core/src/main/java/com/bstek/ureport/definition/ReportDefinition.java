@@ -24,7 +24,11 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import com.bstek.ureport.build.Dataset;
 import com.bstek.ureport.definition.datasource.DatasourceDefinition;
+import com.bstek.ureport.definition.searchform.RenderContext;
+import com.bstek.ureport.definition.searchform.SearchForm;
+import com.bstek.ureport.export.html.SearchFormData;
 import com.bstek.ureport.model.Cell;
 import com.bstek.ureport.model.Column;
 import com.bstek.ureport.model.Report;
@@ -41,10 +45,12 @@ public class ReportDefinition implements Serializable{
 	private CellDefinition rootCell;
 	private HeaderFooterDefinition header;
 	private HeaderFooterDefinition footer;
+	private SearchForm searchForm;
 	private List<CellDefinition> cells;
 	private List<RowDefinition> rows;
 	private List<ColumnDefinition> columns;
 	private List<DatasourceDefinition> datasources;
+	private String searchFormXml;
 	@JsonIgnore
 	private String style;
 
@@ -210,6 +216,19 @@ public class ReportDefinition implements Serializable{
 		return sb.toString();
 	}
 	
+	public SearchFormData buildSearchFormData(Map<String,Dataset> datasetMap,Map<String, Object> parameters){
+		if(searchForm==null){
+			return null;
+		}
+		RenderContext context=new RenderContext(datasetMap,parameters);
+		SearchFormData data=new SearchFormData();
+		data.setFormPosition(searchForm.getFormPosition());
+		data.setHtml(searchForm.toHtml(context));
+		data.setJs(searchForm.toJs(context));
+		data.setSearchFormXml(searchFormXml);
+		return data;
+	}
+	
 	private int getColumnWidth(int columnNumber,int colSpan){
 		int width=0;
 		if(colSpan>0)colSpan--;
@@ -264,6 +283,14 @@ public class ReportDefinition implements Serializable{
 		this.footer = footer;
 	}
 
+	public SearchForm getSearchForm() {
+		return searchForm;
+	}
+
+	public void setSearchForm(SearchForm searchForm) {
+		this.searchForm = searchForm;
+	}
+
 	public List<RowDefinition> getRows() {
 		return rows;
 	}
@@ -292,5 +319,11 @@ public class ReportDefinition implements Serializable{
 	}
 	public List<DatasourceDefinition> getDatasources() {
 		return datasources;
+	}
+	public String getSearchFormXml() {
+		return searchFormXml;
+	}
+	public void setSearchFormXml(String searchFormXml) {
+		this.searchFormXml = searchFormXml;
 	}
 }

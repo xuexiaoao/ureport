@@ -1,22 +1,23 @@
 /*******************************************************************************
- * Copyright (C) 2017 Bstek.com
+ * Copyright 2017 Bstek
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  ******************************************************************************/
 package com.bstek.ureport.build.cell.right;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.bstek.ureport.build.Context;
 import com.bstek.ureport.model.Cell;
@@ -40,10 +41,13 @@ public class CellRightDuplicateUnit {
 		this.rightDuplicate=new RightDuplicate(mainCell,colSize,context);
 	}
 	public void duplicate(Cell cell,int index){
+		Map<Cell,Cell> newCellMap=new HashMap<Cell,Cell>();
+		newCellMap.put(mainCell, cell);
 		rightDuplicate.setIndex(index);
 		for(CellRightDuplicator childDuplicator:rightDuplocatorWrapper.getMainCellChildren()){
 			Cell newCell=childDuplicator.duplicateChildrenCell(rightDuplicate,cell,mainCell,false);
-			processChildrenCells(newCell,childDuplicator.getCell(),rightDuplicate,context,childDuplicator.isNonChild());
+			newCellMap.put(childDuplicator.getCell(), newCell);
+			processChildrenCells(newCell,childDuplicator.getCell(),newCellMap,rightDuplicate,childDuplicator.isNonChild());
 			childDuplicator.setNonChild(false);
 		}
 		for(CellRightDuplicator cellRightDuplicator:rightDuplocatorWrapper.getCellDuplicators()){
@@ -55,20 +59,27 @@ public class CellRightDuplicateUnit {
 		cell.getRow().getCells().add(cell);
 		context.addReportCell(cell);
 		rightDuplicate.reset();
+		for(Cell newCell:newCellMap.values()){
+			Cell originLeftCell=newCell.getLeftParentCell();
+			if(originLeftCell!=null && newCellMap.containsKey(originLeftCell)){
+				newCell.setLeftParentCell(newCellMap.get(originLeftCell));
+			}
+		}
 	}
 	
 	public void complete(){
 		rightDuplicate.complete();
 	}
 	
-	private void processChildrenCells(Cell cell,Cell originalCell,RightDuplicate rightDuplicate,Context context,boolean parentNonChild){
+	private void processChildrenCells(Cell cell,Cell originalCell,Map<Cell,Cell> newCellMap,RightDuplicate rightDuplicate,boolean parentNonChild){
 		List<CellRightDuplicator> childCellRightDuplicators=rightDuplocatorWrapper.fetchChildrenDuplicator(originalCell);
 		if(childCellRightDuplicators==null){
 			return;
 		}
 		for(CellRightDuplicator duplicator:childCellRightDuplicators){				
 			Cell newCell=duplicator.duplicateChildrenCell(rightDuplicate,cell,originalCell,parentNonChild);
-			processChildrenCells(newCell,duplicator.getCell(),rightDuplicate,context,duplicator.isNonChild());
+			newCellMap.put(duplicator.getCell(), newCell);
+			processChildrenCells(newCell,duplicator.getCell(),newCellMap,rightDuplicate,duplicator.isNonChild());
 			duplicator.setNonChild(false);
 		}
 	}

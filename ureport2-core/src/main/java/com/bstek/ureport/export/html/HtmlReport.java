@@ -28,9 +28,11 @@ public class HtmlReport {
 	private String style;
 	private int totalPage;
 	private int pageIndex;
+	private int column;
 	private String reportAlign;
 	private Collection<ChartData> chartDatas;
 	private int htmlIntervalRefreshValue;
+	private SearchFormData searchFormData;
 	private int totals;//总条数
 	public String getContent() {
 		return content;
@@ -56,6 +58,24 @@ public class HtmlReport {
 	public void setPageIndex(int pageIndex) {
 		this.pageIndex = pageIndex;
 	}
+	public int getColumn() {
+		return column;
+	}
+	public void setColumn(int column) {
+		this.column = column;
+	}
+	
+	public int getTotalPageWithCol() {
+		int totalPageWithCol=totalPage;
+		if(column>0){
+			totalPageWithCol=totalPage / column;
+			int m=totalPage % column;
+			if(m>0){
+				totalPageWithCol++;
+			}			
+		}
+		return totalPageWithCol;
+	}
 	public String getReportAlign() {
 		return reportAlign;
 	}
@@ -73,6 +93,12 @@ public class HtmlReport {
 	}
 	public void setHtmlIntervalRefreshValue(int htmlIntervalRefreshValue) {
 		this.htmlIntervalRefreshValue = htmlIntervalRefreshValue;
+	}
+	public SearchFormData getSearchFormData() {
+		return searchFormData;
+	}
+	public void setSearchFormData(SearchFormData searchFormData) {
+		this.searchFormData = searchFormData;
 	}
 
 	public int getTotals() {

@@ -47,9 +47,6 @@ public abstract class BaseCondition implements Condition {
 	public final boolean filter(Cell cell,Cell currentCell,Object obj,Context context) {
 		Object left=computeLeft(cell,currentCell,obj,context);
 		Object right=computeRight(cell,currentCell,obj,context);
-		if(left==null || right==null){
-			return false;
-		}
 		boolean result=ExpressionUtils.conditionEval(op, left, right);		
 		if(join!=null && nextCondition!=null){
 			if(result){
@@ -84,7 +81,13 @@ public abstract class BaseCondition implements Condition {
 			List<BindData> bindDataList=bindData.getData();
 			List<Object> list=new ArrayList<Object>();
 			for(BindData bd:bindDataList){
-				list.add(bd.getValue());
+				Object v=bd.getValue();
+				list.add(v);
+			}
+			if(list.size()==1){
+				return list.get(0);
+			}else if(list.size()==0){
+				return null;
 			}
 			return list;
 		}else if(data instanceof NoneExpressionData){

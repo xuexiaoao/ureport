@@ -3,6 +3,7 @@
  */
 var webpack = require('webpack');
 module.exports = {
+    devtool: 'cheap-source-map',
     entry: {
         designer:'./src/index.js',
         preview:'./src/preview.js'

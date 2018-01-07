@@ -5,17 +5,15 @@ UReport2是一款高性能的架构在Spring之上纯Java报表引擎，通过�
 
 UReport2是第一款基于Apache-2.0协议开源的中式报表引擎。
 
-# 链接
-
-文档视频教程地址：[http://wiki.bsdn.org/display/UR/ureport2+Home](http://wiki.bsdn.org/display/UR/ureport2+Home)
+## 文档视频教程地址：
+1.  BSDN WIKI： [http://wiki.bsdn.org/display/UR/ureport2+Home](http://wiki.bsdn.org/display/UR/ureport2+Home)
+2.  w3cschool： [https://www.w3cschool.cn/ureport](https://www.w3cschool.cn/ureport)
 
 # QQ群
 
 群号：423339793
 
-#### ![](https://github.com/youseries/assets/blob/master/images/qq-qrcode.png)
+#### ![](/docs/images/qq-qrcode.png)
 
-# License
 
-Apache-2.0
 

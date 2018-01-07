@@ -1,23 +1,23 @@
 /*******************************************************************************
- * Copyright (C) 2017 Bstek.com
+ * Copyright 2017 Bstek
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  ******************************************************************************/
 package com.bstek.ureport.console.html;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -80,11 +80,16 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 				if(!(ex instanceof ReportDesignException)){
 					ex.printStackTrace();					
 				}
-				errorMsg=ex.toString();
+				errorMsg=buildExceptionMessage(ex);
 			}
+			String title=buildTitle(req);
+			context.put("title", title);
 			if(htmlReport==null){
-				context.put("content", "<div style='color:red'><strong>报表计算错误：</strong>"+errorMsg+"</div>");
+				context.put("content", "<div style='color:red'><strong>报表计算出错，错误信息如下：</strong><br><div style=\"margin:10px\">"+errorMsg+"</div></div>");
 				context.put("error", true);
+				context.put("searchFormJs", "");
+				context.put("downSearchFormHtml", "");
+				context.put("upSearchFormHtml", "");
 			}else{
 				SearchFormData formData=htmlReport.getSearchFormData();
 				if(formData!=null){
@@ -105,6 +110,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 				context.put("style", htmlReport.getStyle());
 				context.put("reportAlign", htmlReport.getReportAlign());				
 				context.put("totalPage", htmlReport.getTotalPage()); 
+				context.put("totalPageWithCol", htmlReport.getTotalPageWithCol()); 
 				context.put("pageIndex", htmlReport.getPageIndex());
 				context.put("chartDatas", convertJson(htmlReport.getChartDatas()));
 				context.put("error", false);
@@ -112,6 +118,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 				context.put("intervalRefreshValue",htmlReport.getHtmlIntervalRefreshValue());
 				String customParameters=buildCustomParameters(req);
 				context.put("customParameters", customParameters);
+				context.put("_t", "");
 				Tools tools=null;
 				if(MobileUtils.isMobile(req)){
 					tools=new Tools(false);
@@ -154,6 +161,24 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 			template.merge(context, writer);
 			writer.close();
 		}
+	}
+	
+	private String buildTitle(HttpServletRequest req){
+		String title=req.getParameter("_title");
+		if(StringUtils.isBlank(title)){
+			title=req.getParameter("_u");
+			title=decode(title);
+			int point=title.lastIndexOf(".ureport.xml");
+			if(point>-1){
+				title=title.substring(0,point);
+			}
+			if(title.equals("p")){
+				title="设计中报表";
+			}
+		}else{
+			title=decode(title);
+		}
+		return title+"-ureport";
 	}
 	
 	private String convertJson(Collection<ChartData> data){
@@ -260,7 +285,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 		}
 		if(file.equals(PREVIEW_KEY)){
 			Report report=null;
-			if(StringUtils.isNotBlank(pageIndex) && StringUtils.isBlank(reload)){
+			if(StringUtils.isNotBlank(pageIndex) && !pageIndex.equals("0") && StringUtils.isBlank(reload)){
 				report=CacheUtils.getReport(fullName);
 			}
 			ReportDefinition reportDefinition=(ReportDefinition)TempObjectCache.getObject(PREVIEW_KEY);
@@ -273,7 +298,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 			}
 			htmlReport=new HtmlReport();
 			String html=null;
-			if(StringUtils.isNotBlank(pageIndex)){
+			if(StringUtils.isNotBlank(pageIndex) && !pageIndex.equals("0")){
 				Context context=report.getContext();
 				int index=Integer.valueOf(pageIndex);
 				SinglePageData pageData=PageBuilder.buildSinglePageData(index, report);
@@ -289,14 +314,18 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 			}else{
 				html=htmlProducer.produce(report);				
 			}
+			if(report.getPaper().isColumnEnabled()){
+				htmlReport.setColumn(report.getPaper().getColumnCount());				
+			}
 			htmlReport.setChartDatas(report.getContext().getChartDataMap().values());			
 			htmlReport.setContent(html);
+			htmlReport.setTotalPage(report.getPages().size());
 			htmlReport.setStyle(reportDefinition.getStyle());
-			htmlReport.setSearchFormData(reportDefinition.buildSearchFormData());
+			htmlReport.setSearchFormData(reportDefinition.buildSearchFormData(report.getContext().getDatasetMap(),parameters));
 			htmlReport.setReportAlign(report.getPaper().getHtmlReportAlign().name());
 			htmlReport.setHtmlIntervalRefreshValue(report.getPaper().getHtmlIntervalRefreshValue());
 		}else{
-			if(StringUtils.isNotBlank(pageIndex)){
+			if(StringUtils.isNotBlank(pageIndex) && !pageIndex.equals("0")){
 				int index=Integer.valueOf(pageIndex);
 				htmlReport=exportManager.exportHtml(file,req.getContextPath(),parameters,index);								
 			}else{
@@ -317,7 +346,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 			}
 			String name=obj.toString();
 			String value=req.getParameter(name);
-			if(name==null || value==null || name.startsWith("_")){
+			if(name==null || value==null || (name.startsWith("_") && !name.equals("_n"))){
 				continue;
 			}
 			if(sb.length()>0){
@@ -329,7 +358,18 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 		}
 		return sb.toString();
 	}
-
+	
+	private String buildExceptionMessage(Throwable throwable){
+		Throwable root=buildRootException(throwable);
+		StringWriter sw=new StringWriter();
+		PrintWriter pw=new PrintWriter(sw);
+		root.printStackTrace(pw);
+		String trace=sw.getBuffer().toString();
+		trace=trace.replaceAll("\n", "<br>");
+		pw.close();
+		return trace;
+	}
+	
 	public void setExportManager(ExportManager exportManager) {
 		this.exportManager = exportManager;
 	}

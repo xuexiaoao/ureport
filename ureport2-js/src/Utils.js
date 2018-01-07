@@ -211,7 +211,14 @@ export function tableToXml(context){
                 cellXml+=`<![CDATA[${value.value || ''}]]>`;
                 cellXml+=`</simple-value>`;
             }else if(value.type==='image'){
-                cellXml+=`<image-value source="${value.source}">`;
+                cellXml+=`<image-value source="${value.source}"`;
+                if(value.width){
+                    cellXml+=` width="${value.width}"`
+                }
+                if(value.height){
+                    cellXml+=` height="${value.height}"`;
+                }
+                cellXml+=`>`;
                 cellXml+=`<text>`;
                 cellXml+=`<![CDATA[${value.value}]]>`;
                 cellXml+=`</text>`;
@@ -310,7 +317,7 @@ export function tableToXml(context){
                         if(option.position){
                             cellXml+=` position="${option.position}"`;
                         }
-                        if(option.display){
+                        if(option.display!==undefined && option.display!==null){
                             cellXml+=` display="${option.display}"`;
                         }
                         if(option.duration){
@@ -507,6 +514,9 @@ export function tableToXml(context){
         xml+=` column-count="${paper.columnCount}" column-margin="${paper.columnMargin}"`;
     }
     xml+=`></paper>`;
+    if(context.reportDef.searchFormXml){
+        xml+=context.reportDef.searchFormXml;
+    }
     xml+=`</ureport>`;
     return xml;
 };

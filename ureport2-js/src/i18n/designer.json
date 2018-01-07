@@ -14,6 +14,7 @@
     "tip":"点击显示/隐藏属性面板"
   },
   "tools":{
+    "searchFormSwitch":"切换到查询表单设计页",
     "alignLeft":{
       "upDownAlign":"上下对齐",
       "leftRightAlign":"左右对齐",
@@ -359,6 +360,8 @@
       "target":"目标窗口：",
       "newWindow":"新窗口",
       "currentWindow":"当前窗口",
+      "parentWindow":"父窗口",
+      "topWindow":"顶层窗口",
       "urlParameter":"URL参数配置",
       "linkUrl":"请先定义链接URL！"
     },
@@ -513,6 +516,8 @@
       "target":"目标窗口：",
       "newWindow":"新窗口",
       "currentWindow":"当前窗口",
+      "parentWindow":"父窗口",
+      "topWindow":"顶层窗口",
       "urlParameterConfig":"URL参数配置",
       "urlTip":"请先定义链接URL！",
       "cellType":"单元格类型：",
@@ -706,6 +711,8 @@
       "repeatFooter":"重复表尾",
       "summary":"总结行",
       "cancel":"取消行类型",
+      "copy":"复制单元格样式",
+      "paste":"粘贴单元格样式",
       "clearContent":"清空内容",
       "clearStyle":"清空格式",
       "clearAll":"清空所有",

@@ -1,18 +1,17 @@
 /*******************************************************************************
- * Copyright (C) 2017 Bstek.com
+ * Copyright 2017 Bstek
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  ******************************************************************************/
 package com.bstek.ureport.build;
 
@@ -23,7 +22,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -36,6 +34,7 @@ import com.bstek.ureport.build.cell.down.DownExpandBuilder;
 import com.bstek.ureport.build.cell.right.RightExpandBuilder;
 import com.bstek.ureport.build.paging.BasePagination;
 import com.bstek.ureport.build.paging.Page;
+import com.bstek.ureport.build.paging.PagingBuilder;
 import com.bstek.ureport.definition.Band;
 import com.bstek.ureport.definition.Expand;
 import com.bstek.ureport.definition.Orientation;
@@ -61,7 +60,6 @@ import com.bstek.ureport.model.Row;
  */
 public class ReportBuilder extends BasePagination implements ApplicationContextAware{
 	public static final String BEAN_ID="ureport.reportBuilder";
-	private static final Logger log=Logger.getGlobal();
 	private ApplicationContext applicationContext;
 	private Map<String,DatasourceProvider> datasourceProviderMap=new HashMap<String,DatasourceProvider>();
 	private Map<Expand,CellBuilder> cellBuildersMap=new HashMap<Expand,CellBuilder>();
@@ -92,7 +90,8 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 		doFillBlankRows(report,context);
 		recomputeCells(report,context);
 		long end=System.currentTimeMillis();
-		log.info("Report compute completed:"+(end-start)+"ms");
+		String msg="~~~ Report compute completed:"+(end-start)+"ms";
+		Utils.logToConsole(msg);
 		return report;
 	}
 	
@@ -234,6 +233,9 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 				for(int i=start;i>-1;i--){
 					Row currentRow=rows.get(i);
 					Map<Column, Cell> prevColMap=rowMap.get(currentRow);
+					if(prevColMap==null){
+						continue;
+					}
 					if(prevColMap.containsKey(column)){
 						currentCell=prevColMap.get(column);
 						break;
@@ -248,10 +250,15 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 				colSpan--;
 				index+=colSpan;
 			}
-			Cell newCell=newBlankCell(currentCell, column, report);
-			newCell.setRow(newRow);
-			newRow.getCells().add(newCell);
-			newCellMap.put(newCell.getColumn(), newCell);
+			int rowSpan=currentCell.getRowSpan();
+			if(rowSpan>1){
+				currentCell.setRowSpan(rowSpan+1);
+			}else{
+				Cell newCell=newBlankCell(currentCell, column, report);
+				newCell.setRow(newRow);
+				newRow.getCells().add(newCell);
+				newCellMap.put(newCell.getColumn(), newCell);
+			}
 		}
 		return newRow;
 	}
@@ -367,6 +374,7 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 				}
 				rowHeight+=rowRealHeight+1;
 				pageRows.add(row);
+				row.setPageIndex(pageIndex);
 				boolean overflow=false;
 				if((i+1)<rows.size()){
 					Row nextRow=rows.get(i+1);
@@ -389,6 +397,7 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 				Page newPage=buildPage(pageRows,pageRepeatHeaders,pageRepeatFooters,titleRows,pageIndex,report);
 				pages.add(newPage);
 			}
+			report.getContext().setTotalPages(pages.size());
 			buildPageHeaderFooter(pages, report);
 		}else if(pagingMode.equals(PagingMode.fixrows)){
 			int fixRows=paper.getFixRows()-headerRows.size()-footerRows.size();
@@ -428,6 +437,7 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 					}
 					continue;
 				}
+				row.setPageIndex(pageIndex);
 				pageRows.add(row);
 				if((pageRows.size()+footerRows.size()) >= fixRows){
 					Page newPage=buildPage(pageRows,pageRepeatHeaders,pageRepeatFooters,titleRows,pageIndex,report);
@@ -501,6 +511,7 @@ public class ReportBuilder extends BasePagination implements ApplicationContextA
 			buildPageHeaderFooter(pages, report);
 		}
 		buildSummaryRows(summaryRows, pages);
+		PagingBuilder.computeExistPageFunctionCells(report);
 		report.setPages(pages);
 	}
 	

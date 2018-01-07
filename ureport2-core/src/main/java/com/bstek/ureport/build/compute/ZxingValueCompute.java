@@ -1,18 +1,17 @@
 /*******************************************************************************
- * Copyright (C) 2017 Bstek.com
+ * Copyright 2017 Bstek
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  ******************************************************************************/
 package com.bstek.ureport.build.compute;
 
@@ -36,7 +35,10 @@ import com.bstek.ureport.definition.value.ValueType;
 import com.bstek.ureport.definition.value.ZxingValue;
 import com.bstek.ureport.exception.ReportComputeException;
 import com.bstek.ureport.expression.model.Expression;
+import com.bstek.ureport.expression.model.data.BindDataListExpressionData;
 import com.bstek.ureport.expression.model.data.ExpressionData;
+import com.bstek.ureport.expression.model.data.ObjectExpressionData;
+import com.bstek.ureport.expression.model.data.ObjectListExpressionData;
 import com.bstek.ureport.model.Cell;
 import com.bstek.ureport.model.Image;
 import com.google.zxing.BarcodeFormat;
@@ -71,26 +73,44 @@ public class ZxingValueCompute implements ValueCompute {
 		}else{
 			Expression expression=value.getExpression();
 			ExpressionData<?> data=expression.execute(cell,cell, context);
-			Object obj=data.getData();
-			if(obj instanceof List){
-				List<?> listData=(List<?>)obj;
-				for(Object o:listData){
-					if(o!=null){
-						Image image=buildImage(barcodeForamt,o.toString(),w,h);
-						list.add(new BindData(image));						
-					}
-				}
-			}else if(obj instanceof String){
-				String text=obj.toString();
-				if(text.startsWith("\"") && text.endsWith("\"")){
-					text=text.substring(1,text.length()-1);
-				}
-				Image image=buildImage(barcodeForamt,text,w,h);
-				list.add(new BindData(image));			
-			}else{
-				if(obj!=null){
+			if(data instanceof BindDataListExpressionData){
+				BindDataListExpressionData listData=(BindDataListExpressionData)data;
+				List<BindData> bindDataList=listData.getData();
+				for(BindData bindData:bindDataList){
+					Object obj=bindData.getValue();
+					if(obj==null)obj="";
 					Image image=buildImage(barcodeForamt,obj.toString(),w,h);
-					list.add(new BindData(image));					
+					list.add(new BindData(image));
+				}
+			}else if(data instanceof ObjectExpressionData){
+				ObjectExpressionData exprData=(ObjectExpressionData)data;
+				Object obj=exprData.getData();
+				if(obj==null){
+					obj="";
+				}else if(obj instanceof String){
+					String text=obj.toString();
+					if(text.startsWith("\"") && text.endsWith("\"")){
+						text=text.substring(1,text.length()-1);
+					}
+					obj=text;
+				}
+				Image image=buildImage(barcodeForamt,obj.toString(),w,h);
+				list.add(new BindData(image));
+			}else if(data instanceof ObjectListExpressionData){
+				ObjectListExpressionData listExprData=(ObjectListExpressionData)data;
+				List<?> listData=listExprData.getData();
+				for(Object obj:listData){
+					if(obj==null){
+						obj="";
+					}else if(obj instanceof String){
+						String text=obj.toString();
+						if(text.startsWith("\"") && text.endsWith("\"")){
+							text=text.substring(1,text.length()-1);
+						}
+						obj=text;
+					}
+					Image image=buildImage(barcodeForamt,obj.toString(),w,h);
+					list.add(new BindData(image));
 				}
 			}
 		}

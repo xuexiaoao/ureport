@@ -1,18 +1,17 @@
 /*******************************************************************************
- * Copyright (C) 2017 Bstek.com
+ * Copyright 2017 Bstek
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  ******************************************************************************/
 package com.bstek.ureport.definition.dataset;
 
@@ -20,16 +19,21 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
+import com.bstek.ureport.Utils;
 import com.bstek.ureport.build.Context;
 import com.bstek.ureport.build.Dataset;
 import com.bstek.ureport.definition.datasource.DataType;
+import com.bstek.ureport.expression.ExpressionUtils;
 import com.bstek.ureport.expression.model.Expression;
 import com.bstek.ureport.expression.model.data.ExpressionData;
 import com.bstek.ureport.expression.model.data.ObjectExpressionData;
+import com.bstek.ureport.utils.ProcedureUtils;
 
 
 /**
@@ -43,28 +47,49 @@ public class SqlDatasetDefinition implements DatasetDefinition {
 	private List<Parameter> parameters;
 	private List<Field> fields;
 	private Expression sqlExpression;
-	
 	public Dataset buildDataset(Map<String,Object> parameterMap,Connection conn){
 		String sqlForUse=sql;
+		Context context=new Context(null,parameterMap);
 		if(sqlExpression!=null){
-			Context context=new Context(null,parameterMap);
-			ExpressionData<?> exprData=sqlExpression.execute(null, null, context);
-			if(exprData instanceof ObjectExpressionData){
-				ObjectExpressionData data=(ObjectExpressionData)exprData;
-				Object obj=data.getData();
-				if(obj!=null){
-					String s=obj.toString();
-					s=s.replaceAll("\\\\", "");
-					sqlForUse=s;
-				}
+			sqlForUse=executeSqlExpr(sqlExpression, context);
+		}else{
+			Pattern pattern=Pattern.compile("\\$\\{.*?\\}");
+			Matcher matcher=pattern.matcher(sqlForUse);
+			while(matcher.find()){
+				String substr=matcher.group();
+				String sqlExpr=substr.substring(2,substr.length()-1);
+				Expression expr=ExpressionUtils.parseExpression(sqlExpr);
+				String result=executeSqlExpr(expr, context);
+				sqlForUse=sqlForUse.replace(substr, result);
 			}
 		}
+		Utils.logToConsole("RUNTIME SQL:"+sqlForUse);
 		Map<String, Object> pmap = buildParameters(parameterMap);
+		if(ProcedureUtils.isProcedure(sqlForUse)){
+			List<Map<String,Object>> result = ProcedureUtils.procedureQuery(sqlForUse,pmap,conn);
+			return new Dataset(name,result);
+		}
 		SingleConnectionDataSource datasource=new SingleConnectionDataSource(conn,false);
 		NamedParameterJdbcTemplate jdbcTemplate=new NamedParameterJdbcTemplate(datasource);
 		List<Map<String,Object>> list= jdbcTemplate.queryForList(sqlForUse, pmap);
 		return new Dataset(name,list);
 	}
+	
+	private String executeSqlExpr(Expression sqlExpr,Context context){
+		String sqlForUse=null;
+		ExpressionData<?> exprData=sqlExpr.execute(null, null, context);
+		if(exprData instanceof ObjectExpressionData){
+			ObjectExpressionData data=(ObjectExpressionData)exprData;
+			Object obj=data.getData();
+			if(obj!=null){
+				String s=obj.toString();
+				s=s.replaceAll("\\\\", "");
+				sqlForUse=s;
+			}
+		}
+		return sqlForUse;
+	}
+
 	
 	private Map<String,Object> buildParameters(Map<String,Object> params){
 		Map<String,Object> map=new HashMap<String,Object>();

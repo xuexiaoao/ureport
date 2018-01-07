@@ -25,6 +25,9 @@ hs_err_pid*
 .idea
 *.iml
 
+#eclpse file
+.settings
+
 #target file
 */target/*
 

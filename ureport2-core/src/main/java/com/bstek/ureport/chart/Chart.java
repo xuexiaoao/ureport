@@ -1,18 +1,17 @@
 /*******************************************************************************
- * Copyright (C) 2017 Bstek.com
+ * Copyright 2017 Bstek
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  ******************************************************************************/
 package com.bstek.ureport.chart;
 
@@ -45,13 +44,22 @@ public class Chart {
 		sb.append("\"type\":\""+dataset.getType()+"\",");
 		sb.append("\"data\":"+dataset.buildDataJson(context, cell)+",");
 		sb.append("\"options\":{");
+		boolean withoption=false;
 		if(options!=null && options.size()>0){
-			for(Option option:options){
-				sb.append(option.buildOptionJson());					
-				sb.append(",");
+			for(int i=0;i<options.size();i++){
+				Option option=options.get(i);
+				if(i>0){
+					sb.append(",");
+				}
+				sb.append(option.buildOptionJson());
+				withoption=true;
 			}
 		}
 		if(xaxes!=null || yaxes!=null){
+			if(withoption){
+				sb.append(",");
+			}
+			withoption=true;
 			sb.append("\"scales\":{");
 			if(xaxes!=null){
 				sb.append("\"xAxes\":[");
@@ -73,6 +81,9 @@ public class Chart {
 			}
 			sb.append("}");
 		}else{
+			if(withoption){
+				sb.append(",");
+			}
 			if(hasYAxes(dataset)){
 				sb.append("\"scales\":{\"yAxes\":[{\"ticks\":{\"min\":0}}]}");				
 			}

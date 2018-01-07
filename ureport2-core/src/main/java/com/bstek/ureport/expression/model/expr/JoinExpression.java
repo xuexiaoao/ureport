@@ -26,7 +26,6 @@ import com.bstek.ureport.expression.model.data.ExpressionData;
 import com.bstek.ureport.expression.model.data.ObjectExpressionData;
 import com.bstek.ureport.expression.model.data.ObjectListExpressionData;
 import com.bstek.ureport.model.Cell;
-import com.bstek.ureport.utils.ElUtils;
 
 /**
  * @author Jacky.gao
@@ -99,7 +98,7 @@ public class JoinExpression extends BaseExpression {
 				}
 			}
 		}
-		Object obj=ElUtils.eval(str);
+		Object obj=context.evalExpr(str);
 		return new ObjectExpressionData(obj);
 	}
 	public List<BaseExpression> getExpressions() {

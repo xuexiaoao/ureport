@@ -1,18 +1,17 @@
 /*******************************************************************************
- * Copyright (C) 2017 Bstek.com
+ * Copyright 2017 Bstek
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  ******************************************************************************/
 package com.bstek.ureport.chart.dataset.impl.category;
 
@@ -21,7 +20,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +55,7 @@ public abstract class CategoryDataset extends BaseDataset {
 	protected String buildDatasetJson(Context context,Cell cell,String props){
 		List<?> dataList=DataUtils.fetchData(cell, context, datasetName);
 		List<Object> categoryList=new ArrayList<Object>();
-		Map<Object,Map<Object,List<Object>>> seriesDataMap=new HashMap<Object,Map<Object,List<Object>>>();
+		Map<Object,Map<Object,List<Object>>> seriesDataMap=new LinkedHashMap<Object,Map<Object,List<Object>>>();
 		for(Object obj:dataList){
 			Object category=Utils.getProperty(obj, categoryProperty);
 			if(category==null){
@@ -158,11 +156,9 @@ public abstract class CategoryDataset extends BaseDataset {
 	
 	protected double collectData(List<Object> list){
 		double result=0;
-		//modify by cooper 2017/09/27 13:54 start
 		if(list.size()==0){
 			return result;
 		}
-		//modify by cooper 2017/09/27 13:54 end
 		switch(collectType){
 		case select:
 			result = Utils.toBigDecimal(list.get(0)).doubleValue();

@@ -50,7 +50,11 @@ public class ExportManagerImpl implements ExportManager {
 		HtmlReport htmlReport=new HtmlReport();
 		String content=htmlProducer.produce(report);
 		htmlReport.setContent(content);
+		if(reportDefinition.getPaper().isColumnEnabled()){
+			htmlReport.setColumn(reportDefinition.getPaper().getColumnCount());
+		}
 		htmlReport.setStyle(reportDefinition.getStyle());
+		htmlReport.setSearchFormData(reportDefinition.buildSearchFormData(report.getContext().getDatasetMap(),parameters));
 		htmlReport.setReportAlign(report.getPaper().getHtmlReportAlign().name());
 		htmlReport.setChartDatas(report.getContext().getChartDataMap().values());
 		htmlReport.setHtmlIntervalRefreshValue(report.getPaper().getHtmlIntervalRefreshValue());
@@ -80,7 +84,11 @@ public class ExportManagerImpl implements ExportManager {
 		}
 		HtmlReport htmlReport=new HtmlReport();
 		htmlReport.setContent(content);
+		if(reportDefinition.getPaper().isColumnEnabled()){
+			htmlReport.setColumn(reportDefinition.getPaper().getColumnCount());
+		}
 		htmlReport.setStyle(reportDefinition.getStyle());
+		htmlReport.setSearchFormData(reportDefinition.buildSearchFormData(report.getContext().getDatasetMap(),parameters));
 		htmlReport.setPageIndex(pageIndex);
 		htmlReport.setTotalPage(pageData.getTotalPages());
 		htmlReport.setReportAlign(report.getPaper().getHtmlReportAlign().name());
