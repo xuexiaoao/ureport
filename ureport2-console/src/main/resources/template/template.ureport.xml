@@ -64,5 +64,9 @@
 	<datasource name="defaultDataSource" type="buildin">
 	</datasource>
 
+	<datasource name="testLibraryDataSource" type="buildin">
+	</datasource>
+
+
 	<paper type="A4" orientation="portrait" paging-mode="fitpage"></paper>
 </ureport>
