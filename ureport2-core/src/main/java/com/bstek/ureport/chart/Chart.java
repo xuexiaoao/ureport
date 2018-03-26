@@ -81,16 +81,14 @@ public class Chart {
 			}
 			sb.append("}");
 		}else{
-			if(withoption){
+			if(withoption && hasYAxes(dataset)){
 				sb.append(",");
-			}
-			if(hasYAxes(dataset)){
 				sb.append("\"scales\":{\"yAxes\":[{\"ticks\":{\"min\":0}}]}");				
 			}
 		}
 		sb.append("}");
 		sb.append("}");
-		ChartData chartData=new ChartData(sb.toString());
+		ChartData chartData=new ChartData(sb.toString(),cell);
 		context.addChartData(chartData);
 		return chartData;
 	}

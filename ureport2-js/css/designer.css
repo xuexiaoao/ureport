@@ -1,3 +1,9 @@
+.handsontable tr{
+    background: transparent;
+}
+.handsontable td, .handsontable th{
+    background: transparent;
+}
 .ud-toolbar{
     width: 100%;
     background: #f8f8f8;

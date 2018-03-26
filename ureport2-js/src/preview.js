@@ -23,6 +23,7 @@ import en18nJsonData from './i18n/preview_en.json';
 }(jQuery));
 
 $(document).ready(function(){
+    const urlParameters=window.location.search;
     let language=window.navigator.language || window.navigator.browserLanguage;
     if(!language){
         language='zh-cn';
@@ -123,6 +124,7 @@ const urlParameters=buildLocationSearchParameters();
     });
     //modify by cooper 2017/10/09 09:18 end
 });
+
 window._currentPageIndex=null;
 window._totalPage=null;
 
@@ -284,11 +286,16 @@ function _refreshData(second){
             },second);
         },
         error:function(response){
+            const tableContainer=$(`#_ureport_table`);
+            tableContainer.empty();
             if(response && response.responseText){
-                alert("服务端错误："+response.responseText+"");
+                tableContainer.append("<h3 style='color: #d30e00;'>服务端错误："+response.responseText+"</h3>");
             }else{
-                alert('加载数据失败！');
+                tableContainer.append("<h3 style='color: #d30e00;'>加载数据失败</h3>");
             }
+            setTimeout(function(){
+                _refreshData(second);
+            },second);
         }
     });
 };
@@ -305,6 +312,9 @@ window._buildChartDatas=function(chartData){
 };
 window._buildChart=function(canvasId,chartJson){
     const ctx=document.getElementById(canvasId);
+    if(!ctx){
+        return;
+    }
     let options=chartJson.options;
     if(!options){
         options={};
@@ -360,32 +370,7 @@ window._buildChart=function(canvasId,chartJson){
     //add by Cooper 2017/10/17 21:24 end
     const chart=new Chart(ctx,chartJson);
 };
-
- //modify by cooper 2017/10/09 09:18 start
-window._getPageData=function(params,operation){
-    let url="/unicomReport/ureport/preview";
-    var index = params.indexOf("&current");
-    if(index==-1){
-        url +=params;
-    }else{
-        var _params = params.substring(0,index);
-        url += _params;
-    }
-    var last_current = $("#current").val();
-    if(last_current=='${current}'|| last_current==null||last_current==''){
-        last_current = 0;
-    }
-    var current =0;
-    if(operation=='next'){
-        current = parseInt(last_current)+100;
-    }else if(operation=='last'){
-        current = parseInt(last_current)-100;
-    }
-    url = url+"&current="+current;
-    $(window.parent.document).find("#audit").attr("src", url);
-};
- //modify by cooper 2017/10/09 09:18 end
- window.submitSearchForm=function(file,customParameters){
+window.submitSearchForm=function(file,customParameters){
     window.searchFormParameters={};
     for(let fun of window.formElements){
         const json=fun.call(this);
@@ -433,3 +418,27 @@ window._getPageData=function(params,operation){
         }
     });
 };
+ //modify by cooper 2017/10/09 09:18 start
+window._getPageData=function(params,operation){
+    let url="/unicomReport/ureport/preview";
+    var index = params.indexOf("&current");
+    if(index==-1){
+        url +=params;
+    }else{
+        var _params = params.substring(0,index);
+        url += _params;
+    }
+    var last_current = $("#current").val();
+    if(last_current=='${current}'|| last_current==null||last_current==''){
+        last_current = 0;
+    }
+    var current =0;
+    if(operation=='next'){
+        current = parseInt(last_current)+100;
+    }else if(operation=='last'){
+        current = parseInt(last_current)-100;
+    }
+    url = url+"&current="+current;
+    $(window.parent.document).find("#audit").attr("src", url);
+};
+ //modify by cooper 2017/10/09 09:18 end

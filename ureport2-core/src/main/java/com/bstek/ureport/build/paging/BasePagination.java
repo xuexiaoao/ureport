@@ -36,9 +36,7 @@ public abstract class BasePagination {
 	protected void buildSummaryRows(List<Row> summaryRows,List<Page> pages){
 		Page lastPage=pages.get(pages.size()-1);
 		List<Row> lastPageRows=lastPage.getRows();
-		int summaryRowSize=summaryRows.size()-1;
-		for(int i=summaryRowSize;i>-1;i--){
-			Row row=summaryRows.get(i);
+		for(Row row:summaryRows){
 			row.setPageIndex(pages.size());
 			lastPageRows.add(row);
 		}
@@ -50,7 +48,7 @@ public abstract class BasePagination {
 		List<Column> columns=report.getColumns();
 		Context context=report.getContext();
 		context.setPageIndex(pageIndex);
-		context.setCurrentPageRows(rows);
+		context.setCurrentPageRows(pageIndex,rows);
 		Map<Row, Map<Column, Cell>> rowColCellsMap=report.getRowColCellMap();
 		List<Row> reportRows=report.getRows();
 		for(int i=0;i<rows.size();i++){
@@ -214,7 +212,7 @@ public abstract class BasePagination {
 			newCell.setFormatData(cell.getFormatData());
 			newCell.setExistPageFunction(cell.isExistPageFunction());
 			if(cell.isExistPageFunction()){
-				context.addExistPageFunctionCells(newCell);				
+				context.addExistPageFunctionCells(newCell);
 			}
 			newMap.put(col, newCell);
 		}

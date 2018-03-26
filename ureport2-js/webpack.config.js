@@ -3,13 +3,13 @@
  */
 var webpack = require('webpack');
 module.exports = {
-    devtool: 'cheap-source-map',
     entry: {
         designer:'./src/index.js',
+        searchform:'./src/form/index.js',
         preview:'./src/preview.js'
     },
     output: {
-        path: '../ureport2-console/src/main/resources/asserts/js',
+        path: '../ureport2-console/src/main/resources/ureport-asserts/js',
         filename: '[name].bundle.js'
     },
     module: {
@@ -31,7 +31,7 @@ module.exports = {
                 test: /\.(eot|woff|woff2|ttf|svg|png|jpg)\??.*$/,
                 loader: 'url-loader?limit=1000000&name=[name]-[hash].[ext]'
             },
-            ,{
+            {
                 test: /\.json$/,
                 loader: 'json-loader'
             }
