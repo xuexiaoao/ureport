@@ -58,6 +58,7 @@
 					<include>**/*.TTF</include>
 					<include>**/*.TTC</include>
 					<include>**/*.woff</include>
+					<include>**/*.woff2</include>
 					<include>**/*.md</include>
 					<include>**/*.template</include>
 				</includes>
@@ -86,12 +87,24 @@
 					<include>**/*.TTF</include>
 					<include>**/*.TTC</include>
 					<include>**/*.woff</include>
+					<include>**/*.woff2</include>
 					<include>**/*.md</include>
 					<include>**/*.template</include>
 				</includes>
 			</resource>
 		</resources>
 		<plugins>
+            <!--			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -102,7 +115,12 @@
 					<encoding>utf-8</encoding>
 				</configuration>
 			</plugin>
-<!--			<plugin>
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-release-plugin</artifactId>
+			  <version>2.5.3</version>
+			</plugin>			
+			<!--<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
 				<version>1.6.7</version>

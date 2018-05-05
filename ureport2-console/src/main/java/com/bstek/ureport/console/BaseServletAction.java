@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.bstek.ureport.exception.ReportComputeException;
-
 
 /**
  * @author Jacky.gao
@@ -51,7 +49,18 @@ public abstract class BaseServletAction implements ServletAction {
 			value=URLDecoder.decode(value, "utf-8");
 			return value;
 		}catch(Exception ex){
-			throw new ReportComputeException(ex);
+			return value;
+		}
+	}
+	protected String decodeContent(String content){
+		if(content==null){
+			return content;
+		}
+		try{
+			content=URLDecoder.decode(content, "utf-8");
+			return content;
+		}catch(Exception ex){
+			return content;
 		}
 	}
 	
