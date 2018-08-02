@@ -212,7 +212,7 @@ public abstract class BasePagination {
 			newCell.setFormatData(cell.getFormatData());
 			newCell.setExistPageFunction(cell.isExistPageFunction());
 			if(cell.isExistPageFunction()){
-				context.addExistPageFunctionCells(newCell);
+				context.addExistPageFunctionCells(newCell);				
 			}
 			newMap.put(col, newCell);
 		}

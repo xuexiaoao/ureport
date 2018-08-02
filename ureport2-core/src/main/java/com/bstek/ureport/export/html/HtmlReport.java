@@ -64,7 +64,7 @@ public class HtmlReport {
 	public void setColumn(int column) {
 		this.column = column;
 	}
-
+	
 	public int getTotalPageWithCol() {
 		int totalPageWithCol=totalPage;
 		if(column>0){
@@ -72,7 +72,7 @@ public class HtmlReport {
 			int m=totalPage % column;
 			if(m>0){
 				totalPageWithCol++;
-			}
+			}			
 		}
 		return totalPageWithCol;
 	}

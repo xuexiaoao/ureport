@@ -1149,7 +1149,7 @@ chardet@^0.4.0:
   version "0.4.2"
   resolved "http://registry.npm.taobao.org/chardet/download/chardet-0.4.2.tgz#b5473b33dc97c424e5d98dc87d55d4d8a29c8bf2"
 
-chart.js@^2.6.0:
+chart.js@^2.7.2:
   version "2.7.2"
   resolved "http://registry.npm.taobao.org/chart.js/download/chart.js-2.7.2.tgz#3c9fde4dc5b95608211bdefeda7e5d33dffa5714"
   dependencies:
@@ -1168,6 +1168,10 @@ chartjs-color@^2.1.0:
   dependencies:
     chartjs-color-string "^0.5.0"
     color-convert "^0.5.3"
+
+chartjs-plugin-datalabels@^0.3.0:
+  version "0.3.0"
+  resolved "http://registry.npm.taobao.org/chartjs-plugin-datalabels/download/chartjs-plugin-datalabels-0.3.0.tgz#f739a9a200a1cffb23206855bda5056c2ad6fca9"
 
 chokidar@^1.6.1:
   version "1.7.0"

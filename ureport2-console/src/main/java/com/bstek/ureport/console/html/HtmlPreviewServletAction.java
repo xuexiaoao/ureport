@@ -133,7 +133,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 							String[] infos=toolsInfo.split(",");
 							for(String name:infos){
 								tools.doInit(name);
-							}
+							}						
 						}
 						context.put("_t", toolsInfo);
 						context.put("hasTools", true);
@@ -180,7 +180,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 		}
 		return title+"-ureport";
 	}
-
+	
 	private String convertJson(Collection<ChartData> data){
 		if(data==null || data.size()==0){
 			return "";
@@ -215,10 +215,10 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 		}else{
 			reportDefinition=reportRender.getReportDefinition(file);
 		}
-		Report report=reportBuilder.buildReport(reportDefinition, parameters);
+		Report report=reportBuilder.buildReport(reportDefinition, parameters);	
 		Map<String, ChartData> chartMap=report.getContext().getChartDataMap();
 		if(chartMap.size()>0){
-			CacheUtils.storeChartDataMap(chartMap);
+			CacheUtils.storeChartDataMap(chartMap);				
 		}
 		FullPageData pageData=PageBuilder.buildFullPageData(report);
 		StringBuilder sb=new StringBuilder();
@@ -289,7 +289,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 			Report report=reportBuilder.buildReport(reportDefinition, parameters);
 			Map<String, ChartData> chartMap=report.getContext().getChartDataMap();
 			if(chartMap.size()>0){
-				CacheUtils.storeChartDataMap(chartMap);
+				CacheUtils.storeChartDataMap(chartMap);				
 			}
 			htmlReport=new HtmlReport();
 			String html=null;
@@ -310,9 +310,9 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 				html=htmlProducer.produce(report);				
 			}
 			if(report.getPaper().isColumnEnabled()){
-				htmlReport.setColumn(report.getPaper().getColumnCount());
+				htmlReport.setColumn(report.getPaper().getColumnCount());				
 			}
-			htmlReport.setChartDatas(report.getContext().getChartDataMap().values());
+			htmlReport.setChartDatas(report.getContext().getChartDataMap().values());			
 			htmlReport.setContent(html);
 			htmlReport.setTotalPage(report.getPages().size());
 			htmlReport.setStyle(reportDefinition.getStyle());
@@ -353,7 +353,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 		}
 		return sb.toString();
 	}
-
+	
 	private String buildExceptionMessage(Throwable throwable){
 		Throwable root=buildRootException(throwable);
 		StringWriter sw=new StringWriter();
@@ -364,7 +364,7 @@ public class HtmlPreviewServletAction extends RenderPageServletAction {
 		pw.close();
 		return trace;
 	}
-
+	
 	public void setExportManager(ExportManager exportManager) {
 		this.exportManager = exportManager;
 	}
